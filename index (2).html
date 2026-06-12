@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitLog Pro - Fitness Sipu Vishwakarma</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #151f32;
+            --input-bg: #0b111e;
+            --accent-color: #38bdf8;
+            --accent-hover: #0284c7;
+            --custom-workout-color: #a855f7;
+            --text-main: #f8fafc;
+            --text-muted: #64748b;
+            --border-color: #22314d;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 40px 20px 80px 20px; }
+        .app-container { max-width: 1200px; margin: 0 auto; }
+        
+        /* Header & Owner Branding */
+        header { text-align: center; margin-bottom: 40px; position: relative; }
+        header h1 { font-size: 2.8rem; font-weight: 700; color: var(--text-main); letter-spacing: -0.05em; }
+        header h1 span { color: var(--accent-color); }
+        .owner-badge { display: inline-block; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); color: var(--accent-color); padding: 6px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; margin-top: 10px; letter-spacing: 0.5px; }
+        .insta-btn { display: inline-block; margin-left: 10px; font-size: 0.85rem; color: #f43f5e; font-weight: 700; text-decoration: none; border-bottom: 1px dashed #f43f5e; padding-bottom: 2px; transition: color 0.2s; }
+        .insta-btn:hover { color: #fda4af; border-color: #fda4af; }
+        header p.sub-tag { color: var(--text-muted); font-size: 0.95rem; margin-top: 12px; }
+
+        /* Grid Layout */
+        .main-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; }
+        @media (max-width: 950px) { .main-grid { grid-template-columns: 1fr; } }
+
+        /* Cards */
+        .panel-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 30px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); }
+        .panel-card h2 { font-size: 1.3rem; font-weight: 600; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+
+        /* Form elements */
+        .search-box { position: relative; margin-bottom: 15px; }
+        input[type="text"], input[type="number"], textarea, select { width: 100%; padding: 14px 16px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; color: white; font-size: 0.95rem; transition: all 0.2s; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15); }
+        
+        /* Custom Workout Builder Box (Kept Visible for UI Demonstration) */
+        .custom-add-container { display: flex; gap: 10px; margin-top: 15px; padding: 15px; background: rgba(168, 85, 247, 0.05); border: 1px dashed rgba(168, 85, 247, 0.3); border-radius: 10px; justify-content: space-between; align-items: center; }
+        .btn-custom-add { background: var(--custom-workout-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+        .btn-custom-add:hover { background: #9333ea; }
+
+        /* Table CSS */
+        .form-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .form-table th, .form-table td { text-align: left; padding: 12px; border-bottom: 1px solid var(--border-color); }
+        .form-table th { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        
+        .btn-primary { width: 100%; background: var(--accent-color); color: #0b0f19; font-weight: 600; padding: 16px; border: none; border-radius: 10px; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
+        .btn-primary:hover { background: var(--accent-hover); }
+
+        /* History Master Dashboard Table */
+        .history-panel { grid-column: 1 / -1; }
+        .table-wrapper { overflow-x: auto; margin-top: 15px; border-radius: 12px; border: 1px solid var(--border-color); }
+        .db-table { width: 100%; border-collapse: collapse; background: var(--card-bg); text-align: left; }
+        .db-table th, .db-table td { padding: 18px; border-bottom: 1px solid var(--border-color); }
+        .db-table th { background: #0e1626; color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; }
+        .db-table tr:hover { background: rgba(255,255,255,0.01); }
+
+        /* Badges */
+        .date-container { display: flex; flex-direction: column; gap: 4px; }
+        .date-main { font-weight: 600; color: var(--text-main); }
+        .day-time { font-size: 0.8rem; color: var(--text-muted); }
+        
+        .tag { display: inline-block; padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; margin-right: 6px; margin-bottom: 6px; font-weight: 500; }
+        .tag-standard { background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.2); color: var(--accent-color); }
+        .tag-custom { background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #c084fc; }
+        
+        .mood-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; background: #1e293b; border: 1px solid var(--border-color); }
+        .comment-box { font-size: 0.9rem; color: #94a3b8; max-width: 300px; word-wrap: break-word; }
+
+        .btn-delete { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 0.9rem; font-weight: 500; }
+        .btn-delete:hover { text-decoration: underline; }
+
+        /* Permanent Footer Branding */
+        footer { position: fixed; bottom: 0; left: 0; right: 0; background: #090d16; border-top: 1px solid var(--border-color); padding: 12px 20px; text-align: center; font-size: 0.85rem; color: var(--text-muted); z-index: 100; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        footer strong { color: var(--accent-color); font-weight: 600; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <h1>FitLog <span>Pro v2.5</span></h1>
+        <div class="owner-badge">
+            🏋️‍♂️ Fitness Sipu Vishwakarma Project
+            <a href="https://instagram.com/_vishwakarma_189_" target="blank" class="insta-btn">● Follow @_vishwakarma_189</a>
+        </div>
+        <p class="sub-tag">Advanced Database Tracker • Pure HTML & CSS UI Template</p>
+    </header>
+
+    <div class="main-grid">
+        <div class="panel-card">
+            <h2>🔍 1. Search Exercise or Create Custom</h2>
+            <div class="search-box">
+                <input type="text" placeholder="Type here (e.g. Push-up, Pull-up, Squats...)">
+            </div>
+
+            <div class="custom-add-container">
+                <p style="font-size:0.9rem; color:#c084fc; margin-right: 10px;">This exercise is not in the list! Do you want to add it permanently?</p>
+                <button type="button" class="btn-custom-add">➕ Yes, Add It</button>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 15px;">Note: Custom exercises you add will be previewed on your local device layout.</p>
+        </div>
+
+        <div class="panel-card">
+            <h2>📝 2. Log Today's Count & Experience</h2>
+            <form>
+                <table class="form-table">
+                    <thead>
+                        <tr>
+                            <th>Exercise Name</th>
+                            <th style="width: 120px;">Count (Reps)</th>
+                            <th style="width: 60px; text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 500; color: #fff;">Regular Push-up</td>
+                            <td><input type="number" placeholder="25" min="1"></td>
+                            <td style="text-align:center;"><button type="button" class="btn-delete">✖️</button></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 500; color: #c084fc;">Diamond Push-up ⭐</td>
+                            <td><input type="number" placeholder="15" min="1"></td>
+                            <td style="text-align:center;"><button type="button" class="btn-delete">✖️</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 20px; border-top: 1px dashed var(--border-color); padding-top: 20px;">
+                    <label style="display:block; margin-bottom:8px; font-size:0.9rem; color:#94a3b8;">How was your energy level today?</label>
+                    <select style="margin-bottom: 15px;">
+                        <option value="🔥 Superhuman">🔥 Superhuman (Feeling Unstoppable)</option>
+                        <option value="💪 Great">💪 Great Workout</option>
+                        <option value="😐 Normal">😐 Normal / Okay Day</option>
+                        <option value="😴 Exhausted">😴 Exhausted / Low Energy</option>
+                    </select>
+
+                    <label style="display:block; margin-bottom:8px; font-size:0.9rem; color:#94a3b8;">Add custom notes or experience feedback:</label>
+                    <textarea rows="3" placeholder="Write your workout notes or feedback here..."></textarea>
+                </div>
+
+                <button type="button" class="btn-primary" style="margin-top: 20px;">🚀 Lock & Preview Layout Data</button>
+            </form>
+        </div>
+
+        <div class="panel-card history-panel">
+            <h2>📊 3. Master Workout Logs Database</h2>
+            <div class="table-wrapper">
+                <table class="db-table">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Performance Report (Exercises Logged)</th>
+                            <th>Energy Level</th>
+                            <th>User Notes / Comments</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="date-container">
+                                    <span class="date-main">Jun 12, 2026</span>
+                                    <span class="day-time">Friday • 07:30 AM</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="tag tag-standard">Regular Push-up: <strong>25</strong></span>
+                                <span class="tag tag-custom">Diamond Push-up: <strong>15</strong></span>
+                            </td>
+                            <td><span class="mood-badge">🔥 Superhuman</span></td>
+                            <td><div class="comment-box">Smashed the chest routine today. Feeling great!</div></td>
+                            <td><button class="btn-delete">Delete</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <span>© 2026 | Official Application Owned by <strong>Fitness Cipu Vishwakarma (@vishwakarma_189)</strong> | All Rights Reserved</span>
+</footer>
+
+</body>
+</html>
